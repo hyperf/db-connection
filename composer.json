@@ -11,9 +11,10 @@
     "support": {
     },
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "hyperf/database": "dev-master",
         "hyperf/di": "dev-master",
+        "hyperf/event": "dev-master",
         "hyperf/pool": "dev-master"
     },
     "require-dev": {
@@ -40,6 +41,9 @@
     },
     "extra": {
         "branch-alias": {
+        },
+        "hyperf": {
+            "config": "Hyperf\\DbConnection\\ConfigProvider"
         }
     },
     "bin": [
