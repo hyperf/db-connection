@@ -38,6 +38,7 @@ use Psr\Container\ContainerInterface;
  * @method static rollBack()
  * @method static commit()
  * @method static int transactionLevel()
+ * @method static string getTablePrefix()
  * @method static array pretend(\Closure $callback)
  * @method static ConnectionInterface connection(string $pool)
  */
