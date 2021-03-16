@@ -13,6 +13,7 @@ namespace Hyperf\DbConnection\Aspect;
 
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\DbConnection\Db;
+use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
@@ -28,10 +29,24 @@ class TransactionAspect extends AbstractAspect
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
-        return Db::transaction(
+        $c = $this->getAnnotationConnection($proceedingJoinPoint->className, $proceedingJoinPoint->methodName);
+        $connection = $c->connection;
+
+        return Db::connection($connection)->transaction(
             function () use ($proceedingJoinPoint) {
                 return $proceedingJoinPoint->process();
             }
         );
     }
+
+    protected function getAnnotationConnection(string $className, string $method): ?Transactional
+    {
+        $collector = AnnotationCollector::get("${className}._m.${method}");
+        $res = $collector[Transactional::class] ?? null;
+        if($res instanceof Transactional){
+            return $res;
+        }
+        return NULL;
+    }
+
 }
