@@ -30,9 +30,16 @@ class TransactionAspect extends AbstractAspect
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $c = $this->getAnnotationConnection($proceedingJoinPoint->className, $proceedingJoinPoint->methodName);
-        $connection = $c->connection;
 
-        return Db::connection($connection)->transaction(
+        if ($c){
+            $connection = $c->connection;
+            return Db::connection($connection)->transaction(
+                function () use ($proceedingJoinPoint) {
+                    return $proceedingJoinPoint->process();
+                }
+            );
+        }
+        return Db::transaction(
             function () use ($proceedingJoinPoint) {
                 return $proceedingJoinPoint->process();
             }
