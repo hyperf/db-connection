@@ -15,10 +15,10 @@ use Hyperf\Contract\ConnectionInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Database\ConnectionInterface as DbConnectionInterface;
 use Hyperf\Database\Connectors\ConnectionFactory;
-use Hyperf\DbConnection\Pool\DbPool;
 use Hyperf\DbConnection\Traits\DbConnection;
 use Hyperf\Pool\Connection as BaseConnection;
 use Hyperf\Pool\Exception\ConnectionException;
+use Hyperf\Pool\Pool;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -27,7 +27,7 @@ class Connection extends BaseConnection implements ConnectionInterface, DbConnec
     use DbConnection;
 
     /**
-     * @var DbPool
+     * @var Pool
      */
     protected $pool;
 
@@ -53,7 +53,7 @@ class Connection extends BaseConnection implements ConnectionInterface, DbConnec
 
     protected $transaction = false;
 
-    public function __construct(ContainerInterface $container, DbPool $pool, array $config)
+    public function __construct(ContainerInterface $container, Pool $pool, array $config)
     {
         parent::__construct($container, $pool);
         $this->factory = $container->get(ConnectionFactory::class);
